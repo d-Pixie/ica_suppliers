@@ -1,0 +1,48 @@
+<h1>Leverantörsöversikt</h1>
+
+<p>
+		Här ser du en lista över alla leverantörer som finns registrerade i systemet.	
+	</p>
+	<p>
+		Du kan inspektera <%= image_tag("details.png") %>, ändra <%= image_tag("edit.png") %>, ta bort <%= image_tag("remove.png") %> eller <%= link_to 'skapa en ny leverantör', new_supplier_path %> på denna sidan. Verktygen för att inspektera, ändra eller ta bort en leverantör hittar du till höger om leverantören i listan när du håller muspekaren över den.
+	</p>
+	<p>
+		För att återgå till förstasidan, följ Tillbaka-länken längst ner.	Eller använd menyn högst upp på sidan.
+	</p>
+
+<table cellpadding="0" cellspacing="0">
+  <tr>
+    <th><h2><%= sortable "name", "Namn" %></h2></th>
+    <th><h2>Adress</h2></th>
+    <th><h2>Postnr</h2></th>
+    <th><h2><%= sortable "city", "Postort" %></h2></th>
+    <th><h2>Tele</h2></th>
+    <th><h2>Fax</h2></th>
+    <th><h2>E-post</h2></th>
+    <th><h2>Hemsida</h2></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @suppliers.each do |supplier| %>
+  <tr>
+    <td><span class="bold"><%= supplier.name %></span></td>
+    <td><span><%= supplier.address %></span></td>
+    <td><span><%= supplier.postalcode %></span></td>
+    <td><span><%= supplier.city %></span></td>
+    <td><span><%= supplier.phone %></span></td>
+    <td><span><%= supplier.fax %></span></td>
+    <td><span><%= supplier.mail? ? mail_to(supplier.mail, image_tag("mail.png")) : image_tag("no.png") %></span></td>
+    <td><span><%= link_to supplier.homepage? ? link_to(image_tag("link.png"), supplier.homepage) : image_tag("no.png") %></span></td>
+    <td><%= link_to image_tag("details.png"), supplier %></td>
+	  <td><%= link_to image_tag("edit.png"), edit_supplier_path(supplier) %></td>
+	  <td><%= link_to image_tag("remove.png"), supplier, confirm: 'Är du säker på att du vill ta bort leverantören?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<div id="bottom_nav">
+	<%= link_to 'Skapa leverantör', new_supplier_path %>
+	<%= link_to 'Tillbaka till översikten', { :controller=>"home", :action => 'index'} %>
+</div>

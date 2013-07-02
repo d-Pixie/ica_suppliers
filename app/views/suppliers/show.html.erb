@@ -1,0 +1,53 @@
+<h1 class="aligned"><%= @supplier.name %></h1>
+
+<p id="notice"><%= notice %></p>
+
+<div id="form_top_half_container">	
+	<%= print_data "Adress:", @supplier.address %>
+	<%= print_data "Postnummer:", @supplier.postalcode %>
+	<%= print_data "Postort:", @supplier.city %>
+	<%= print_data "Telefonnummer:", @supplier.phone %>
+	<%= print_data "Fax:", @supplier.fax %>
+	<%= print_data "E-post:", @supplier.mail %>
+	<%= print_data "Hemsida:", if @supplier.homepage.present? then content_tag(:a, @supplier.homepage, :href => @supplier.homepage) end %>
+	
+	<div class="field">
+	<span class="label bold">Kategorier:</span>
+	<div id="used_categories">
+		<%= render :partial => 'category', :collection => @supplier.categories %>
+		<div class="clearfix"></div>
+	</div>
+	</div>
+	
+	<div id="map_wrapper" class="clearfix">
+		<div id="map_canvas">
+			&nbsp; <!-- Google maps load here ... -->
+		</div>
+	</div>
+</div>
+		
+
+
+<div id="bottom_nav">
+	<%= link_to 'Redigera', edit_supplier_path(@supplier) %>
+	<%= link_to 'Tillbaka till översikt', suppliers_path %>
+</div>
+
+<% if @supplier.latlong %>
+<script type="text/javascript">
+	$('body').bind('map_loaded', function() {
+		/* Place mapmarker on supplier/edit */
+  	var point = new google.maps.LatLng(<%= @supplier.latlong.scan(/\d+/)[0] +'.'+ @supplier.latlong.scan(/\d+/)[1] %>, <%= @supplier.latlong.scan(/\d+/)[2] +'.'+ @supplier.latlong.scan(/\d+/)[3] %>);
+  	marker = new google.maps.Marker({
+  		clickable:false,
+  		icon: '/assets/default.png',
+      position: point,
+      title: $('#supplier_address').val() +', '+$('#supplier_postalcode').val()+' '+$('#supplier_city').val(),
+	     map:map
+	   });
+	   console.log('enter 1');
+	   map.panTo(point);
+	   console.log('exit 1');
+	});
+</script>
+<% end %>

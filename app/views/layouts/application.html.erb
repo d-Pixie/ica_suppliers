@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	  <title>ICASuppliers</title>
+	  <%= stylesheet_link_tag    "application" %>
+	  <%= csrf_meta_tags %>
+	</head>
+	<body>
+		<header>
+			<%= link_to image_tag("logo.gif"), { :controller=>"home", :action => 'index'} %>
+			<div class="aboutLinks">
+		    <ul>
+					<li>
+						<%= link_to 'Till ICA.se', 'http://www.ica.se' %> 
+					</li>
+					<li>
+						<%= link_to 'Om produkten', { :controller=>"home", :action => 'about'} %>
+					</li>
+		  	</ul>
+			</div>
+			
+			<div id="top-navigation">
+				<ul class="menu-links clearfix">
+					<li>
+						<%= link_to('Översikt', { :controller=>"home", :action => 'index'}, @current_controller == "home" && @current_action == "index" ? {:class => 'selected'} : nil ) %>
+					</li>
+					<li>
+						<%= link_to 'Leverantörer', suppliers_path, @current_controller == "suppliers" ? {:class => 'selected'} : nil %>
+					</li>
+					<li>
+						<%= link_to 'Kategorier', categories_path, @current_controller == "categories" ? {:class => 'selected'} : nil %>
+					</li>
+				</ul>
+			</div>
+		</header>
+	
+		<article>
+			<%= yield %>
+		</article>
+	
+		<footer>
+			<!-- Copyright 2011, Jonas Erlandsson Not for public use! -->
+			<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+			<%= javascript_include_tag "application" %>			
+			<%= yield :javascript %>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,85 @@
+<h1>Översikt</h1>
+	
+<div>
+	<div id="map_canvas" style="width:100%; height:500px; background:#555; box-shadow: 0 0 10px #555;">&nbsp;</div>
+	<p>Kartan visar en översikt över alla leverantörer i databasen som vi har positionsdata för.</p>
+	<p>Använd filtren under kartan för att välja eller välja bort leverantörer i kategorier.</p>
+	<p>Om en leverantör ingår i flera kategorier så kommer den inte att döljas förrän alla kategorifilter den ingår i är avslagna.</p>
+	<div id="filters">
+		<%= render :partial => 'category', :collection => @catagories %>
+  	<div class="clearfix"></div>
+	</div>
+</div>
+
+<%- content_for :javascript do %>
+<script type="text/javascript">
+	/*
+	 * TODO Put in external .js
+	 * TODO Add some Ajax fancy to load markers
+	 * TODO Add infowindow support on the map (via chachable Ajax requests preferably)
+	 */
+	var relations = new Array, markers = new Array, point;
+	$('body').bind('map_loaded', function() {
+		var bounds = new google.maps.LatLngBounds();
+		<% @suppliers.each do |supplier| %>
+			<% unless supplier.latlong.to_s == '' %>
+				<%= 'relations['+supplier.id.to_s+'] = [];' %>
+				<% supplier.categories.each do |category| %>
+					<%= 'relations['+supplier.id.to_s+']['+category.id.to_s+'] = true;' %>
+				<% end %>
+				point = new google.maps.LatLng(<%= supplier.latlong.scan(/\d+/)[0] +'.'+ supplier.latlong.scan(/\d+/)[1] %>, 
+																			 <%= supplier.latlong.scan(/\d+/)[2] +'.'+ supplier.latlong.scan(/\d+/)[3] %>);
+				markers[<%= supplier.id.to_s %>] = new google.maps.Marker({ 
+					icon: "/assets/default.png",
+					position: point,
+					map:map
+				});
+				google.maps.event.addListener(markers[<%= supplier.id.to_s %>], "click", function() {
+					window.location = '/suppliers/<%= supplier.id.to_s %>';
+				});
+				bounds.extend(point);
+			<% end %>
+		<% end %>
+		map.fitBounds(bounds);
+		
+		$('div.category').bind({
+			click : function(e){
+				var filter_id = $(this).attr('id').substr(4);
+				for (var index in relations) {
+			    if (String(index >>> 0) == index && index >>> 0 != 0xffffffff) {
+			    	var k = false;
+			    	for (var prop in relations[index]) {
+			    		if (String(prop >>> 0) == prop && prop >>> 0 != 0xffffffff) {
+			    			if (prop == filter_id) relations[index][prop] = relations[index][prop]? false : true; 
+			    			k = k || relations[index][prop];
+			    		}
+			    	}
+			    	if (k) {
+			    		if (markers[index].getMap() == null) {
+			    			markers[index].setMap(map);
+			    		}
+			    	} else {
+			    		if (markers[index].getMap() != null) {
+			    			markers[index].setMap(null);
+			    		}
+			    	}
+			  	}
+				}
+			},
+			hover : function() {
+				var filter_id = $(this).attr('id').substr(4);
+				for (var index in relations) {
+			    if (String(index >>> 0) == index && index >>> 0 != 0xffffffff) {
+			    	var k = false;
+			    	for (var prop in relations[index]) {
+			    		if (String(prop >>> 0) == prop && prop >>> 0 != 0xffffffff) {
+			    			if (prop == filter_id) {
+			    				if (markers[index].getAnimation() == null) {
+			    					markers[index].setAnimation(google.maps.Animation.BOUNCE);
+			    				} else {
+			    					markers[index].setAnimation(null);
+			}	}	}	}	}	} }
+		});
+	});
+</script>
+<%- end %>

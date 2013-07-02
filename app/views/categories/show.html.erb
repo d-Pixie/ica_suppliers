@@ -1,0 +1,10 @@
+<h1 class="aligned"><%= @category.name %></h1>
+
+<p id="notice"><%= notice %></p>
+
+<%= print_data "Ikon:", image_tag(@category.icon) %>
+
+<div id="bottom_nav">
+	<%= link_to 'Redigera', edit_category_path(@category) %>
+	<%= link_to 'Tillbaka till översikt', categories_path %>
+</div>

@@ -1,0 +1,6 @@
+<%= fields_for "project[category_attributes][]", category do |category_form| %>
+<div class="category use" <%= 'id=cat_'+category.id.to_s %>>
+    <span><%= category.name %></span>
+    <div><%= image_tag(category.icon) %></div>
+</div>
+<% end %>

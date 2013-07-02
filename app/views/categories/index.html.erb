@@ -1,0 +1,38 @@
+<h1>Kategorier</h1>
+
+<p>
+	Här ser du en lista över alla kategorier som finns registrerade i systemet.	
+</p>
+<p>
+	Du kan inspektera <%= image_tag("details.png") %>, ändra <%= image_tag("edit.png") %>, ta bort <%= image_tag("remove.png") %> eller <%= link_to 'skapa en ny kategori', new_category_path %> på denna sidan. Verktygen för att inspektera, ändra eller ta bort en katagori hittar du till höger om kategorin i listan när du håller muspekaren över den.
+</p>
+<p>
+	För att återgå till förstasidan, följ Tillbaka-länken längst ner.	Eller använd menyn högst upp på sidan.
+</p>
+
+<table cellpadding="0" cellspacing="0">
+  <tr>
+    <th><h2><%= sortable "name", "Namn" %></h2></th>
+    <th><h2><%= sortable "icon", "Ikon" %></h2></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  
+<% @categories.each do |category| %>
+  <tr>
+    <td><span><%= category.name %></span></td>
+    <td><%= image_tag(category.icon) %></td>
+    <td><%= link_to image_tag("details.png"), category %></td>
+    <td><%= link_to image_tag("edit.png"), edit_category_path(category) %></td>
+    <td><%= link_to image_tag("remove.png"), category, confirm: 'Är du säker på att du vill ta bort kategorin?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<div id="bottom_nav">
+	<%= link_to 'Skapa ny kategori', new_category_path %>
+	<%= link_to 'Tillbaka till översikten', { :controller=>"home", :action => 'index'} %>
+</div>

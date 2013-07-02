@@ -1,0 +1,10 @@
+<h1 class="aligned">Redigera kategori</h1>
+
+<% content_for :navigation do %>
+	<%= link_to 'Detaljer', @category %>
+  <%= link_to 'Tillbaka till översikt', categories_path %>
+<% end %>
+
+<% @submit_text = "Uppdatera kategori" %>
+
+<%= render 'form' %>

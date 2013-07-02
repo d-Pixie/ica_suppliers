@@ -1,0 +1,9 @@
+<h1 class="aligned">Lägger till kategori</h1>
+
+<% content_for :navigation do %>
+  <%= link_to 'Tillbaka till översikt', categories_path %>
+<% end %>
+
+<% @submit_text = "Skapa kategori" %>
+
+<%= render 'form' %>

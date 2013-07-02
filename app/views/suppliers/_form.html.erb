@@ -1,0 +1,99 @@
+<%= form_for(@supplier) do |f| %>
+  <% if @supplier.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@supplier.errors.count, "error") %> prohibited this supplier from being saved:</h2>
+
+      <ul>
+      <% @supplier.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+	<div id="form_top_half_container">	
+	  <div class="field">
+	    <%= f.label :name %>
+	    <%= f.text_field :name, :maxlength => 100 %>
+	  </div>
+	  <div class="field guessable">
+	    <%= f.label :address %>
+	    <%= f.text_field :address, :maxlength => 100 %>
+	    <div id="guesses">
+	    </div>
+	  </div>
+	  <div class="field">
+	    <%= f.label :postalcode %>
+	    <%= f.text_field :postalcode, :maxlength => 5 %>
+	  </div>
+	  <div class="field">
+	    <%= f.label :city %>
+	    <%= f.text_field :city, :maxlength => 100 %>
+	  </div>
+	  <div class="field">
+	    <%= f.label :phone %>
+	    <%= f.text_field :phone, :maxlength => 20 %>
+	  </div>
+	  <div class="field">
+	    <%= f.label :fax %>
+	    <%= f.text_field :fax, :maxlength => 20 %>
+	  </div>
+	  <div class="field">
+	    <%= f.label :mail %>
+	    <%= f.text_field :mail, :maxlength => 100 %>
+	  </div>
+	  <div class="field">
+	    <%= f.label :homepage %>
+	    <%= f.text_field :homepage, :maxlength => 100 %>
+	  </div>
+	 	<div id="map_wrapper">
+			<div id="map_canvas">
+				&nbsp; <!-- Google maps load here ... -->
+			</div>
+			<div class="clearfix"></div>
+		</div>
+  </div>
+  
+  <p>
+  	Markera vilka kategorier denna leverantör skall ingå i.
+  </p>
+  <div id="unused_categories">
+  	<%= render :partial => 'category', :collection => @catagories %>
+  	<div class="clearfix"></div>
+	</div>
+  
+  <div class="nothing_too_see_here">
+	  <div class="field">
+	    <%= f.label :latlong %><br />
+	    <%= f.text_field :latlong %>
+	  </div>
+	  <div class="field">
+	    <%= f.label :categories_ids %><br />
+	    <%= f.text_field :categories_ids, :id => 'categories_ids' %>
+	  </div>
+  </div>
+  
+  <div id="bottom_nav">
+  	<%= f.submit @submit_text %>
+  	<%= yield :navigation %>
+	</div>
+	
+	<% if @supplier.latlong %>
+	<script type="text/javascript">
+		$('body').bind('map_loaded', function() {
+			/* Place mapmarker on supplier/edit */
+	  	var point = new google.maps.LatLng(<%= @supplier.latlong.scan(/\d+/)[0] +'.'+ @supplier.latlong.scan(/\d+/)[1] %>, <%= @supplier.latlong.scan(/\d+/)[2] +'.'+ @supplier.latlong.scan(/\d+/)[3] %>);
+	  	marker = new google.maps.Marker({
+	  		clickable:false,
+	  		icon: '/assets/default.png',
+	      position: point,
+	      title: $('#supplier_address').val() +', '+$('#supplier_postalcode').val()+' '+$('#supplier_city').val(),
+		     map:map
+		   });
+		   console.log('enter 1');
+		   map.panTo(point);
+		   console.log('exit 1');
+		});
+	</script>
+	<% end %>
+<% end %>

@@ -1,0 +1,43 @@
+<%= form_for(@category) do |f| %>
+  <% if @category.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@category.errors.count, "error") %> prohibited this category from being saved:</h2>
+
+      <ul>
+      <% @category.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+  
+  <div class="field">
+  	<%= f.label :icon %>
+	  <div id="icons" class="clearfix">
+	    <% Category::ICONS.each do |ico| %>
+	    	<div <%= 'class=selectedIcon' if @category.icon == ico %>>
+	    		<p>
+	  			<input type="radio" name="category[icon]" value="<%= ico %>"<%= 'checked' if @category.icon == ico %>><%= image_tag(ico) %>
+	  			</p>
+	  		</div>
+			<% end %>
+	  </div>
+  </div>
+    
+  <div id="bottom_nav">
+  	<%= f.submit @submit_text %>
+  	<%= yield :navigation %>
+	</div>
+<% end %>
+
+<script type="text/javascript">
+	$('#icons').delegate('div', 'click', function() {
+		$('div.selectedIcon').removeClass('selectedIcon').children('p').children('input').removeAttr('checked');;
+  	$(this).addClass('selectedIcon').children('p').children('input').attr('checked', 'checked');
+	});
+</script>
